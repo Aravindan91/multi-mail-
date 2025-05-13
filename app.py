@@ -4,6 +4,7 @@ from flask import Flask, request , send_file
 # request , pr gerer les requette 
 # send_file pr envoyer le fichier ( comme le pixel.png ) 
 import logging
+import time
 # logging pr enregistrer les evenemnts 
 
 app = Flask(__name__)         
@@ -34,12 +35,12 @@ def pixel():
     email = request.args.get("email")
     #on save l'ouverture dans le log 
     if email : 
-        logging.inf(f"le pixel tracked pr id : {email}")
+        logging.info(f"le pixel tracked pr id : {email}")
     # on enregistre l'ouverture de l email dans un ficher autre 
         try : 
             with open ("save trace email.txt", "a" , encoding="utf-8") as f : 
-                time = time.strftime("%Y-%m-%d %H:%M:%S")
-                f.write(f" {time} -email ouvert par : {email} \n")
+                curent_time = time.strftime("%Y-%m-%d %H:%M:%S")
+                f.write(f" {curent_time} -email ouvert par : {email} \n")
         except Exception as e : 
             logging.error(f"erreur lors du save dans le fihcier , : {e}")
     

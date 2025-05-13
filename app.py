@@ -30,29 +30,29 @@ logging.basicConfig(level=logging.INFO, format = '%(asctime)s-%(levelname)s - %(
 @app.route("/pixel.png")
 # le @ c comme un decoarateur , une etiquette , 
 #ici on dit si on accede dans le chemin pixl.png , on execute la f pixel() 
+@app.route("/pixel.png")
 def pixel():
-    # on recupere l'adresse mail de l'utilisateur
     email = request.args.get("email")
-    #on save l'ouverture dans le log 
-    if email : 
+    if email:
         logging.info(f"le pixel tracked pr id : {email}")
-    # on enregistre l'ouverture de l email dans un ficher autre 
-        try : 
-            with open ("save trace email.txt", "a" , encoding="utf-8") as f : 
-                curent_time = time.strftime("%Y-%m-%d %H:%M:%S")
-                f.write(f" {curent_time} -email ouvert par : {email} \n")
-        except Exception as e : 
-            logging.error(f"erreur lors du save dans le fihcier , : {e}")
+        try:
+            with open("d:/code/mail tracker/mail-tracker propre/save trace email.txt", "a", encoding="utf-8") as f:
+                current_time = time.strftime("%Y-%m-%d %H:%M:%S")
+                f.write(f" {current_time} -email ouvert par : {email} \n")
+                logging.info(f"Enregistrement réussi pour : {email}")  # Ajout d'un log de confirmation
+        except Exception as e:
+            logging.error(f"erreur lors du save dans le fichier : {e}")
+            return "Erreur lors du tracking", 500  # Ajout d'une réponse d'erreur
     
-    # là on renvoi le pixel de tracking 
-    return send_file("pixel.png" , mimetype='image/png')
+    return send_file("pixel.png", mimetype='image/png')
 
 ## là on va verifier si le server marche bien avc un msg smimple 
 
 @app.route("/")
-## pareille mais ici c'est dès l'entrée principale du server 
 def msg():
-    return "server de tracking online , ok !"
+    curent_time = time.strftime("%Y-%m-%d %H:%M:%S")  # Erreur : "curent_time"
+    return f"server de tracking online , ok ! ,voici les details {curent_time} "
+
 
 if __name__ == "__main__":
     app.run(debug=False)

@@ -44,7 +44,7 @@ def pixel():
             logging.error(f"erreur lors du save dans le fihcier , : {e}")
     
     # là on renvoi le pixel de tracking 
-    return send_file("pixel.png" , mimetypes='img/png')
+    return send_file("pixel.png" , mimetype='image/png')
 
 ## là on va verifier si le server marche bien avc un msg smimple 
 

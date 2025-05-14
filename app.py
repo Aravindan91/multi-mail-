@@ -54,6 +54,8 @@ def pixel():
 @app.route("/")
 def msg():
     curent_time = time.strftime("%Y-%m-%d %H:%M:%S") 
+    chemin_fichier = "d:/code/mail tracker/mail-tracker propre/save trace email.txt" 
+
 
     try : 
         # Vérifie si le fichier existe

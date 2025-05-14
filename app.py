@@ -1,3 +1,4 @@
+import email
 import mimetypes
 from flask import Flask, request , send_file
 # flask c le framework web pr gerer le server 
@@ -50,8 +51,33 @@ def pixel():
 
 @app.route("/")
 def msg():
-    curent_time = time.strftime("%Y-%m-%d %H:%M:%S")  # Erreur : "curent_time"
-    return f"server de tracking online , ok ! ,voici les details {curent_time} "
+    curent_time = time.strftime("%Y-%m-%d %H:%M:%S") 
+
+    try : 
+        # Vérifie si le fichier existe
+        if not os.path.exists(chemin_fichier):
+            return "Serveur de tracking en ligne ! \nAucun email n'a encore été ouvert."
+
+            
+        with open("d:/code/mail tracker/mail-tracker propre/save trace email.txt","r",encoding="utf-8") as f :
+            emails_ouverts= f.readline()
+        if emails_ouverts :
+            mssg ="voici les diff prsn qui ont ouvert le mail : \n"
+            for i in emails_ouverts :
+                mssg += i
+                ##mssg += f"{i} à {curent_time} \n"
+        else : 
+            mssg = " aucun mail a été ouvert "
+
+        return f"server tracker online \n {mssg}"
+
+    except Exception as e : 
+        logging.error(f" erreur lors de l'oiverture du fichier : {e}")    
+        return "server de tracking online , ok ! "
+
+
+
+
 
 
 if __name__ == "__main__":

@@ -6,6 +6,8 @@ from flask import Flask, request , send_file
 # send_file pr envoyer le fichier ( comme le pixel.png ) 
 import logging
 import time
+import os 
+
 # logging pr enregistrer les evenemnts 
 
 app = Flask(__name__)         

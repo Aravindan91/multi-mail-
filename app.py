@@ -7,7 +7,6 @@ from flask import Flask, request , send_file
 import logging
 import time
 import os 
-
 # logging pr enregistrer les evenemnts 
 
 app = Flask(__name__)         
@@ -29,6 +28,8 @@ app = Flask(__name__)
 # 2024-01-20 14:30:45-INFO - Email ouvert par utilisateur@email.com
 logging.basicConfig(level=logging.INFO, format = '%(asctime)s-%(levelname)s - %(message)s')
 
+TRACE_FILE = "save_trace_email.txt"
+
 # on creer une route pr servir le pixel de tracking
 @app.route("/pixel.png")
 # le @ c comme un decoarateur , une etiquette , 
@@ -39,7 +40,7 @@ def pixel():
     if email:
         logging.info(f"le pixel tracked pr id : {email}")
         try:
-            with open("d:/code/mail tracker/mail-tracker propre/save trace email.txt", "a", encoding="utf-8") as f:
+            with open(TRACE_FILE, "a", encoding="utf-8") as f:
                 current_time = time.strftime("%Y-%m-%d %H:%M:%S")
                 f.write(f" {current_time} -email ouvert par : {email} \n")
                 logging.info(f"Enregistrement réussi pour : {email}")  # Ajout d'un log de confirmation
@@ -53,17 +54,16 @@ def pixel():
 
 @app.route("/")
 def msg():
-    curent_time = time.strftime("%Y-%m-%d %H:%M:%S") 
-    chemin_fichier = "d:/code/mail tracker/mail-tracker propre/save trace email.txt" 
-
+    curent_time = time.strftime("%Y-%m-%d %H:%M:%S")
+    #chemin_fichier = "d:/code/mail tracker/mail-tracker propre/save trace email.txt" 
 
     try : 
         # Vérifie si le fichier existe
-        if not os.path.exists(chemin_fichier):
+        if not os.path.exists(TRACE_FILE):
             return "Serveur de tracking en ligne ! \nAucun email n'a encore été ouvert."
 
-            
-        with open("d:/code/mail tracker/mail-tracker propre/save trace email.txt","r",encoding="utf-8") as f :
+
+        with open(TRACE_FILE,"r",encoding="utf-8") as f :
             emails_ouverts= f.readline()
         if emails_ouverts :
             mssg ="voici les diff prsn qui ont ouvert le mail : \n"

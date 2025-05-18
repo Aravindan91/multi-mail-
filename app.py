@@ -28,15 +28,19 @@ app = Flask(__name__)
 # 2024-01-20 14:30:45-INFO - Email ouvert par utilisateur@email.com
 logging.basicConfig(level=logging.INFO, format = '%(asctime)s-%(levelname)s - %(message)s')
 
-TRACE_FILE = "save_trace_email.txt"
+TRACE_FILE = os.path.join(os.path.dirname(__file__), "save_trace_email.txt")
+PIXEL_FILE = os.path.join(os.path.dirname(__file__), "pixel.png")
 
 # on creer une route pr servir le pixel de tracking
 @app.route("/pixel.png")
 # le @ c comme un decoarateur , une etiquette , 
 #ici on dit si on accede dans le chemin pixl.png , on execute la f pixel() 
-@app.route("/pixel.png")
+
 def pixel():
     email = request.args.get("email")
+    if not email:
+        logging.warning("Tentative de tracking sans email")
+        return send_file(PIXEL_FILE, mimetype='image/png')
     if email:
         logging.info(f"le pixel tracked pr id : {email}")
         try:
@@ -48,37 +52,35 @@ def pixel():
             logging.error(f"erreur lors du save dans le fichier : {e}")
             return "Erreur lors du tracking", 500  # Ajout d'une réponse d'erreur
     
-    return send_file("pixel.png", mimetype='image/png')
+    return send_file(PIXEL_FILE, mimetype='image/png')
 
-## là on va verifier si le server marche bien avc un msg smimple 
 
 @app.route("/")
 def msg():
-    curent_time = time.strftime("%Y-%m-%d %H:%M:%S")
-    #chemin_fichier = "d:/code/mail tracker/mail-tracker propre/save trace email.txt" 
+    current_time = time.strftime("%Y-%m-%d %H:%M:%S")
 
-    try : 
-        # Vérifie si le fichier existe
+    try:
         if not os.path.exists(TRACE_FILE):
-            return "Serveur de tracking en ligne ! \nAucun email n'a encore été ouvert."
+            return "Serveur de tracking en ligne ! Aucun email n'a encore été ouvert."
+
+        with open(TRACE_FILE, "r", encoding="utf-8") as f:
+            emails_ouverts = f.readlines()  # ✅ lit toutes les lignes dans une liste
+
+        if emails_ouverts:
+            mssg = "Voici les personnes qui ont ouvert le mail :\n\n"
+            for line in emails_ouverts:
+                mssg += line  # ✅ ajoute chaque ligne (pas chaque lettre !)
+        else:
+            mssg = "Aucun mail n'a encore été ouvert."
+
+        return f"Serveur de tracking online ✅\n\n{mssg}"
+
+    except Exception as e:
+        logging.error(f"Erreur lors de l'ouverture du fichier : {e}")
+        return "Erreur lors de la lecture du fichier de tracking."
 
 
-        with open(TRACE_FILE,"r",encoding="utf-8") as f :
-            emails_ouverts= f.readline()
-        if emails_ouverts :
-            mssg ="voici les diff prsn qui ont ouvert le mail : \n"
-            for i in emails_ouverts :
-                mssg += i
-                ##mssg += f"{i} à {curent_time} \n"
-        else : 
-            mssg = " aucun mail a été ouvert "
-
-        return f"server tracker online \n {mssg}"
-
-    except Exception as e : 
-        logging.error(f" erreur lors de l'oiverture du fichier : {e}")    
-        return "server de tracking online , ok ! "
-
+## là on va verifier si le server marche bien avc un msg smimple 
 
 
 

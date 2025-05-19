@@ -8,6 +8,7 @@ import logging
 import time
 import os 
 # logging pr enregistrer les evenemnts 
+import csv  # Ajoutez cet import en haut du fichier
 
 app = Flask(__name__)         
 ## on vient de creer une sintance de flash , un gateau du moule                           
@@ -41,17 +42,34 @@ def pixel():
     if not email:
         logging.warning("Tentative de tracking sans email")
         return send_file(PIXEL_FILE, mimetype='image/png')
+    
     if email:
         logging.info(f"le pixel tracked pr id : {email}")
-        try:
-            with open(TRACE_FILE, "a", encoding="utf-8") as f:
-                current_time = time.strftime("%Y-%m-%d %H:%M:%S")
-                f.write(f" {current_time} -email ouvert par : {email} \n")
-                logging.info(f"Enregistrement réussi pour : {email}")  # Ajout d'un log de confirmation
-        except Exception as e:
-            logging.error(f"erreur lors du save dans le fichier : {e}")
-            return "Erreur lors du tracking", 500  # Ajout d'une réponse d'erreur
+        
     
+    # Recherche des informations dans le CSV
+    nom = "Inconnu"
+    prenom = "Inconnu"
+    try:
+        with open('mailtrack.csv', 'r', encoding='utf-8') as f:
+            lecteur_csv = csv.reader(f)
+            next(lecteur_csv)  # Sauter l'en-tête
+            for ligne in lecteur_csv:
+                if ligne[3] == email:  # L'email est dans la 4ème colonne
+                    prenom = ligne[0]
+                    nom = ligne[1]
+                    break
+        
+        # Enregistrement avec les informations complètes
+        with open(TRACE_FILE, "a", encoding="utf-8") as f:
+            current_time = time.strftime("%Y-%m-%d %H:%M:%S")
+            f.write(f" {current_time} - {prenom} {nom} ({email}) a ouvert l'email\n")
+            logging.info(f"{current_time} - {prenom} {nom} ({email}) a ouvert l'email")
+            #logging.info(f"Enregistrement réussi pour : {prenom} {nom} ({email})")
+    except Exception as e:
+        logging.error(f"Erreur lors du traitement : {e}")
+        return "Erreur lors du tracking", 500
+
     return send_file(PIXEL_FILE, mimetype='image/png')
 
 

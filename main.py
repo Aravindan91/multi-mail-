@@ -77,6 +77,8 @@ try:
             nom = i[1]
             sx = i[2]
             email = i[3]
+            logging.info(f"Tracking EMAIL : {email}")
+
 
             #Générer identifiant unique
             tracking_id = str(uuid.uuid4())

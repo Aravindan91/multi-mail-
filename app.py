@@ -50,6 +50,8 @@ def pixel():
     # Recherche des informations dans le CSV
     nom = "Inconnu"
     prenom = "Inconnu"
+    trouve = False 
+
     try:
         with open('mailtrack.csv', 'r', encoding='utf-8') as f:
             lecteur_csv = csv.reader(f)

@@ -55,10 +55,17 @@ def pixel():
             lecteur_csv = csv.reader(f)
             next(lecteur_csv)  # Sauter l'en-tête
             for ligne in lecteur_csv:
+                logging.info(f"Lecture ligne : {ligne}")
                 if ligne[3] == email:  # L'email est dans la 4ème colonne
                     prenom = ligne[0]
                     nom = ligne[1]
+                    trouve = True
                     break
+            if not trouve:
+                logging.warning(f"Email {email} non trouvé dans le CSV")
+
+
+
         
         # Enregistrement avec les informations complètes
         with open(TRACE_FILE, "a", encoding="utf-8") as f:

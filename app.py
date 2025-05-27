@@ -58,6 +58,8 @@ def pixel():
             next(lecteur_csv)  # Sauter l'en-tête
             for ligne in lecteur_csv:
                 logging.info(f"Lecture ligne : {ligne}")
+                logging.info(f"voici la ligne du mail {ligne[3]} et voici le mail : {email}")
+
                 if ligne[3] == email:  # L'email est dans la 4ème colonne
                     prenom = ligne[0]
                     nom = ligne[1]

@@ -81,8 +81,8 @@ try:
 
 
             #Générer identifiant unique
-            tracking_id = str(uuid.uuid4())
-            logging.info(f"Tracking ID généré : {tracking_id}")
+            #tracking_id = str(uuid.uuid4())
+            #logging.info(f"Tracking ID généré : {tracking_id}")
 
 
             ## on creer le msg via MIME

@@ -60,11 +60,17 @@ def pixel():
                 logging.info(f"Lecture ligne : {ligne}")
                 logging.info(f"voici la ligne du mail {ligne[3]} et voici le mail : {email}")
 
-                if ligne[3] == email:  # L'email est dans la 4ème colonne
-                    prenom = ligne[0]
-                    nom = ligne[1]
-                    trouve = True
-                    break
+                prenom = ligne[0]
+                nom = ligne[1]
+                trouve = True
+                break
+                
+                # if ligne[3] == email:  # L'email est dans la 4ème colonne
+                #     prenom = ligne[0]
+                #     nom = ligne[1]
+                #     trouve = True
+                #     break
+                    
             if not trouve:
                 logging.warning(f"Email {email} non trouvé dans le CSV")
 
